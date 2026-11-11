@@ -1,59 +1,64 @@
 <script setup lang="ts">
+import { LogOut } from '@lucide/vue'
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
-
-const open = ref(false)
-const root = ref<HTMLElement | null>(null)
 
 const email = computed(() => user.value?.email ?? '')
 const initial = computed(() => (email.value[0] ?? '?').toUpperCase())
 
-function onDocClick(e: MouseEvent) {
-  if (open.value && root.value && !root.value.contains(e.target as Node)) open.value = false
-}
-function onKey(e: KeyboardEvent) {
-  if (e.key === 'Escape') open.value = false
-}
-
-onMounted(() => {
-  document.addEventListener('click', onDocClick)
-  document.addEventListener('keydown', onKey)
-})
-onBeforeUnmount(() => {
-  document.removeEventListener('click', onDocClick)
-  document.removeEventListener('keydown', onKey)
-})
-
 async function signOut() {
-  open.value = false
   await supabase.auth.signOut()
   await navigateTo('/login')
 }
 </script>
 
 <template>
-  <header class="app-header">
-    <NuxtLink to="/dashboard" class="brand">Demo App</NuxtLink>
-
-    <div ref="root" class="user-menu">
-      <button
-        type="button"
-        class="avatar"
-        :aria-expanded="open"
-        aria-haspopup="menu"
-        :aria-label="`Account menu for ${email}`"
-        @click="open = !open"
+  <header class="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
+    <div class="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+      <NuxtLink
+        to="/"
+        class="font-serif text-2xl font-medium tracking-tight text-foreground transition-colors duration-200 hover:text-primary"
+        aria-label="realzzy home"
       >
-        {{ initial }}
-      </button>
+        realzzy<span class="text-primary">.</span>
+      </NuxtLink>
 
-      <div v-if="open" class="menu" role="menu">
-        <div class="menu-email" :title="email">
-          <span class="menu-label">Signed in as</span>
-          <span class="menu-value">{{ email }}</span>
-        </div>
-        <button type="button" role="menuitem" class="menu-item" @click="signOut">Log out</button>
-      </div>
+      <DropdownMenu v-if="user">
+        <DropdownMenuTrigger as-child>
+          <button
+            type="button"
+            class="rounded-full ring-1 ring-primary/60 ring-offset-2 ring-offset-background transition-shadow duration-200 hover:ring-primary"
+            :aria-label="`Account menu for ${email}`"
+          >
+            <Avatar class="size-10">
+              <AvatarFallback class="bg-secondary font-serif text-base text-primary">
+                {{ initial }}
+              </AvatarFallback>
+            </Avatar>
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" class="w-64 border-border bg-popover">
+          <DropdownMenuLabel class="flex flex-col gap-0.5 font-normal">
+            <span class="text-xs uppercase tracking-[0.08em] text-muted-foreground">Signed in as</span>
+            <span class="truncate text-sm font-medium text-foreground" :title="email">{{ email }}</span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem class="cursor-pointer" @select="signOut">
+            <LogOut class="size-4" aria-hidden="true" />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <nav v-else class="flex items-center gap-2" aria-label="Account">
+        <Button as-child variant="ghost">
+          <NuxtLink to="/login">Log in</NuxtLink>
+        </Button>
+        <Button as-child>
+          <NuxtLink to="/signup">Sign up</NuxtLink>
+        </Button>
+      </nav>
     </div>
   </header>
 </template>

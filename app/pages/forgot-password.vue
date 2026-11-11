@@ -19,27 +19,27 @@ async function onSubmit() {
 </script>
 
 <template>
-  <main class="card">
-    <h1>Reset password</h1>
+  <AuthCard title="Reset your password">
     <template v-if="sent">
-      <p>
-        If an account exists for <strong>{{ email }}</strong>, we've sent a link to reset your password.
+      <p class="text-muted-foreground">
+        If an account exists for <strong class="text-foreground">{{ email }}</strong>, we've sent a link to reset your
+        password.
       </p>
-      <p class="alt"><NuxtLink to="/login">Back to log in</NuxtLink></p>
+      <p class="mt-6 text-center text-sm"><NuxtLink to="/login" class="link-lux">Back to log in</NuxtLink></p>
     </template>
     <template v-else>
-      <p>Enter your email and we'll send you a link to choose a new password.</p>
-      <form @submit.prevent="onSubmit">
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" autocomplete="email" required />
+      <p class="mb-5 text-muted-foreground">Enter your email and we'll send you a link to choose a new password.</p>
+      <form class="grid gap-5" @submit.prevent="onSubmit">
+        <div class="grid gap-2">
+          <Label for="email">Email</Label>
+          <Input id="email" v-model="email" type="email" autocomplete="email" required />
         </div>
-        <p v-if="error" class="error" role="alert">{{ error }}</p>
-        <button type="submit" :disabled="busy || !email">
+        <p v-if="error" class="text-sm text-destructive" role="alert">{{ error }}</p>
+        <Button type="submit" size="lg" :disabled="busy || !email">
           {{ busy ? 'Sending...' : 'Send reset link' }}
-        </button>
+        </Button>
       </form>
-      <p class="alt"><NuxtLink to="/login">Back to log in</NuxtLink></p>
+      <p class="mt-6 text-center text-sm"><NuxtLink to="/login" class="link-lux">Back to log in</NuxtLink></p>
     </template>
-  </main>
+  </AuthCard>
 </template>

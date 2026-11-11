@@ -18,12 +18,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="card">
-    <h1>Confirming your email...</h1>
-    <p v-if="!timedOut">One moment.</p>
+  <AuthCard title="Confirming your email">
+    <p v-if="!timedOut" class="text-muted-foreground">One moment.</p>
     <template v-else>
-      <p>Your email is confirmed if you followed a valid link. If nothing happens, you can log in now.</p>
-      <p class="alt"><NuxtLink to="/login">Go to log in</NuxtLink></p>
+      <p class="text-muted-foreground">
+        Your email is confirmed if you followed a valid link. If nothing happens, you can log in now.
+      </p>
+      <p class="mt-6 text-center text-sm"><NuxtLink to="/login" class="link-lux">Go to log in</NuxtLink></p>
     </template>
-  </main>
+  </AuthCard>
 </template>

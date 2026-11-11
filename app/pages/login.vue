@@ -46,24 +46,25 @@ async function resend() {
 </script>
 
 <template>
-  <main class="card">
-    <h1>Log in</h1>
-    <form @submit.prevent="onSubmit">
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" v-model="email" type="email" autocomplete="email" required />
+  <AuthCard title="Welcome back" description="Log in to pick up where you left off.">
+    <form class="grid gap-5" @submit.prevent="onSubmit">
+      <div class="grid gap-2">
+        <Label for="email">Email</Label>
+        <Input id="email" v-model="email" type="email" autocomplete="email" required />
       </div>
       <PasswordInput id="password" v-model="password" label="Password" autocomplete="current-password" />
-      <p v-if="error" class="error" role="alert">{{ error }}</p>
-      <p v-if="info" class="success">{{ info }}</p>
-      <button v-if="unconfirmed" type="button" class="secondary" @click="resend">
+      <p v-if="error" class="text-sm text-destructive" role="alert">{{ error }}</p>
+      <p v-if="info" class="text-sm text-success">{{ info }}</p>
+      <Button v-if="unconfirmed" type="button" variant="outline" @click="resend">
         Resend confirmation email
-      </button>
-      <button type="submit" :disabled="busy || !email || !password">
+      </Button>
+      <Button type="submit" size="lg" :disabled="busy || !email || !password">
         {{ busy ? 'Logging in...' : 'Log in' }}
-      </button>
+      </Button>
     </form>
-    <p class="alt"><NuxtLink to="/forgot-password">Forgot password?</NuxtLink></p>
-    <p class="alt">No account? <NuxtLink to="/signup">Sign up</NuxtLink></p>
-  </main>
+    <div class="mt-6 grid gap-2 text-center text-sm text-muted-foreground">
+      <NuxtLink to="/forgot-password" class="link-lux mx-auto">Forgot password?</NuxtLink>
+      <p>New here? <NuxtLink to="/signup" class="link-lux">Create an account</NuxtLink></p>
+    </div>
+  </AuthCard>
 </template>
